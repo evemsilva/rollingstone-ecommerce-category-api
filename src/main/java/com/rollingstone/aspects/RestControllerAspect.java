@@ -23,7 +23,7 @@ public class RestControllerAspect {
     }
 
     @AfterReturning("execution(public * com.rollingstone.spring.controller.*Controller.createCategory(..)))")
-    public void getsCalledOnProductSave() {
+    public void getsCalledOnCategorySave() {
 	logger.info("This aspect is fired when the save method of the controller is called");
 	categoryCreatedCounter.increment();
     }

@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping(value = "/category")
 public class CategoryController
 		extends AbstractController {
 
@@ -28,27 +30,27 @@ public class CategoryController
     }
 
     /*---Add new Category---*/
-    @PostMapping("/product")
+    @PostMapping
     public ResponseEntity<?> createCategory(@RequestBody Category category) {
 	Category savedCategory = categoryService.save(category);
-	CategoryEvent productCreatedEvent = new CategoryEvent("One Category is created", category);
-	eventPublisher.publishEvent(productCreatedEvent);
+	CategoryEvent categoryCreatedEvent = new CategoryEvent("One Category is created", category);
+	eventPublisher.publishEvent(categoryCreatedEvent);
 	return ResponseEntity.ok().body("New Category has been saved with ID:" + savedCategory.getId());
     }
 
     /*---Get a Category by id---*/
-    @GetMapping("/product/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Category> getCategory(@PathVariable("id") long id) {
 	Optional<Category> returnedCategory = categoryService.get(id);
-	Category product = returnedCategory.orElseThrow(() -> new HTTP404Exception("Resource Not Found"));
+	Category category = returnedCategory.orElseThrow(() -> new HTTP404Exception("Resource Not Found"));
 
-	CategoryEvent productCreatedEvent = new CategoryEvent("One Category is retrieved", product);
-	eventPublisher.publishEvent(productCreatedEvent);
-	return ResponseEntity.ok().body(product);
+	CategoryEvent categoryCreatedEvent = new CategoryEvent("One Category is retrieved", category);
+	eventPublisher.publishEvent(categoryCreatedEvent);
+	return ResponseEntity.ok().body(category);
     }
 
     /*---get all Category---*/
-    @GetMapping("/product")
+    @GetMapping
     public @ResponseBody
     Page<Category> getCategorysByPage(@RequestParam(value = "pagenumber", defaultValue = DEFAULT_PAGE_NUMBER) Integer pageNumber,
 				    @RequestParam(value = "pagesize", defaultValue = DEFAULT_PAGE_SIZE) Integer pageSize) {
@@ -56,15 +58,15 @@ public class CategoryController
     }
 
     /*---Update a Category by id---*/
-    @PutMapping("/product/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable("id") long id, @RequestBody Category product) {
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateCategory(@PathVariable("id") long id, @RequestBody Category category) {
 	checkResourceFound(this.categoryService.get(id));
-	categoryService.update(id, product);
+	categoryService.update(id, category);
 	return ResponseEntity.ok().body("Category has been updated successfully.");
     }
 
     /*---Delete a Category by id---*/
-    @DeleteMapping("/product/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable("id") long id) {
 	checkResourceFound(this.categoryService.get(id));
 	categoryService.delete(id);

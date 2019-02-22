@@ -33,8 +33,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void update(long id, Category product) {
-        categoryDao.save(product);
+    public void update(long id, Category category) {
+        categoryDao.save(category);
     }
 
     @Override
